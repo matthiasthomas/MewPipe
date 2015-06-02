@@ -1,0 +1,70 @@
+<section id="upload">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="page-header">
+				<h1 id="container">Upload</h1>
+			</div>
+			<div class="col-md-6">
+				<!-- <div class="progress">
+					<div class="progress-bar progress-bar-striped" role="progressbar" aria-valuenow="{{dynamic}}" aria-valuemin="0" aria-valuemax="100" style="width: {{dynamic}}%;">
+						{{dynamic}}%
+					</div>
+				</div> -->
+				<div class="panel-upload">
+					<div class="panel panel-success ">
+						<div class="panel-heading">
+							<h3 class="panel-title"><i class="fa fa-upload"></i> Upload Here</h3>
+						</div>
+						<div class="panel-body">
+							<!-- Drag'n drop -->
+							<div ngf-drop ng-model="files" class="drop-box center" ngf-drag-over-class="dragover" ngf-multiple="true" ngf-allow-dir="true"
+							ngf-accept="'.mp4,.avi'">Drop files here !</div>
+							<button class="center btn btn-primary btn-lg" ngf-select ng-model="files" ngf-multiple="true">Select files</button>
+							<br>
+							<button ng-click="submitUpload()" class="progress-button center" data-style="shrink" data-horizontal ng-progressbtnn>Submit</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="panel panel-primary" ng-repeat="file in files" ng-init="file.rights = 'public' ">
+					<div class="panel-heading" >
+						<h3 class="panel-title">Video informations</h3>
+					</div>
+					<div class="panel-body">
+						<div class="form-group">
+							<label for="inputName" class="col-lg-2 control-label">Title</label>
+							<input type="text" class="form-control input-lg" ng-value="file.name" id="inputTitle">
+						</div>
+						<div class="form-group">
+							<label for="textArea" class="col-lg-2 control-label">Description</label>
+							<div class="col-lg-10">
+								<textarea class="form-control" rows="3" id="textArea" ng-model="file.description"></textarea>
+								<span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
+							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-lg-2 control-label">Rights</label>
+							<div class="col-lg-10">
+								<div class="radio">
+									<label>
+										<input type="radio" name="optionsRadios{{$index}}" ng-model="file.rights" value="public" checked>Public</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="optionsRadios{{$index}}" ng-model="file.rights" value="link">Private link</label>
+								</div>
+								<div class="radio">
+									<label>
+										<input type="radio" name="optionsRadios{{$index}}" ng-model="file.rights" value="private">Private</label>
+								</div>
+							</div>
+						</div>
+						<label for="tag">Tag</label>
+						<span ng-repeat="tag in tags" class="label tags" ng-class="tag.checked ? 'label-success' : 'label-info'" ng-click="tag.checked = !tag.checked">{{tag.name}}</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>

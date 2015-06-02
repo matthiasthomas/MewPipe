@@ -1,0 +1,284 @@
+@import "compass";
+@import "../../lib/normalize.css/normalize.css";
+@import "../../lib/angular-bootstrap/ui-bootstrap-csp.css";
+@import "../../lib/bootswatch-dist/css/bootstrap.css";
+@import "../../lib/fontawesome/css/font-awesome.css";
+
+@import "components/_var.scss";
+@import "components/dialog.scss";
+@import "components/hover.scss";
+@import "components/notification.scss";
+@import "components/progress.scss";
+@import "index.scss";
+@import "user.scss";
+@import "video.scss";
+
+
+$height-of-loading-line: 0.3em;
+$animation-duration: 5s;
+$background-of-the-line: #f07719;
+
+.fa {
+	padding-right: 7px;
+}
+
+.pl {
+	padding-left: 7px;
+}
+
+.pr {
+	padding-right: 7px;
+}
+
+.center {
+	margin: 0 auto;
+	display: block;
+	text-align: center;
+}
+
+#signIn {
+	.well-lg {
+		font-size: 2em;
+		.fa-facebook {
+			top: 12px;
+			position: relative;
+			color: #3B5998!important;
+		}
+		.fa-google-plus {
+			top: 12px;
+			position: relative;
+			color: #d34836!important;
+		}
+	}
+}
+
+#banner {
+	.col-md-8 {
+	  padding: 20px;
+	  margin: 0px auto;
+	  float: none;
+	}
+}
+
+
+.left-inner-addon {
+    position: relative;
+}
+.left-inner-addon input {
+    padding-left: 30px;    
+}
+.left-inner-addon i {
+    position: absolute;
+    padding: 11px 12px;
+    pointer-events: none;
+	z-index: 99;
+	
+}
+
+.right-inner-addon {
+    position: relative;
+}
+.right-inner-addon input {
+    padding-right: 30px;    
+}
+.right-inner-addon i {
+    position: absolute;
+    right: 0px;
+    padding: 10px 12px;
+    pointer-events: none;
+	z-index: 99;
+}
+
+
+.search {
+	
+	input{
+		
+	}
+}
+
+.image_right {
+	height: 200px;
+	display: block;
+	position: relative;
+	margin: 30px;
+	float: right;
+}
+
+.image_left {
+	height: 200px;
+	display: block;
+	position: relative;
+	margin: 30px;
+	float: left;
+}
+
+footer {
+	background-color:#1d2a36;
+	display: block;
+	margin: 0 auto;
+	padding: 2%;
+	margin-top: 20px;
+
+	ul li {
+		display: inline-block;
+		content: '|';
+		padding: 9px;
+		margin: 0 auto;
+		position: relative;
+		
+	}
+}
+
+/* .loading-line starts :D */
+
+.loading-line {  
+	height: $height-of-loading-line;
+	left: 0;
+	position: fixed;
+	top: 0;
+	width: 100%;
+	z-index: 999;
+
+  // @include section
+  @include animation(loading $animation-duration linear);
+  @include transition(1s all ease-in-out);
+}
+
+
+@include keyframes(loading) {
+	0% {
+		background: $background-of-the-line;
+		width: 0%;    
+	}
+
+	30% {
+		background: $background-of-the-line;
+		width: 20%;
+	}
+
+	55% {
+		background: $background-of-the-line;
+		width: 55%;
+	}
+
+	60% {
+		background: $background-of-the-line;
+		width: 62%;
+	}
+
+	75% {
+		background: $background-of-the-line;
+		width: 75%;
+	}
+
+	88% {
+		background: $background-of-the-line;
+		width: 80%;
+	}
+
+	100% {
+		background: $background-of-the-line;
+	}
+}
+
+li {
+	list-style: none;
+}
+
+a {
+	color: rgba(0,0,0,0.4);
+	text-decoration: none;
+	outline: none;
+}
+
+/*----------------------------------*/
+/*------- Menu hover effect --------/
+/*--------------------------------*/
+
+nav a {
+	position: relative;
+	display: inline-block;
+	margin: 15px 25px;
+	outline: none;
+	color: #fff;
+	text-decoration: none;
+	text-transform: uppercase;
+	letter-spacing: 1px;
+	font-weight: 400;
+	text-shadow: 0 0 1px rgba(255,255,255,0.3);
+	font-size: 1.35em;
+	line-height: 1;
+}
+
+nav a:hover,
+nav a:focus {
+	outline: none;
+}
+
+.cl-effect-5 a {
+	overflow: hidden;
+	padding: 0 4px;
+	height: 1em;
+}
+
+.cl-effect-5 a span {
+	position: relative;
+	display: inline-block;
+	-webkit-transition: -webkit-transform 0.3s;
+	-moz-transition: -moz-transform 0.3s;
+	transition: transform 0.3s;
+}
+
+.cl-effect-5 a span::before {
+	position: absolute;
+	top: 100%;
+	content: attr(data-hover);
+	font-weight: 700;
+	-webkit-transform: translate3d(0,0,0);
+	-moz-transform: translate3d(0,0,0);
+	transform: translate3d(0,0,0);
+}
+
+.cl-effect-5 a:hover span,
+.cl-effect-5 a:focus span {
+	-webkit-transform: translateY(-100%);
+	-moz-transform: translateY(-100%);
+	transform: translateY(-100%);
+}
+
+/*--------------------*/
+/***** Videogular *****/
+/*--------------------*/
+
+videogular {
+	text-align: initial;
+}
+
+.videogular-container {
+	width: 100%;
+	height: 320px;
+	margin: auto;
+	overflow: hidden;
+}
+
+@media (min-width: 1200px) {
+	.videogular-container {
+		width: 1170px;
+		height: 658.125px;
+	}
+}
+
+@media (min-width: 992px) and (max-width: 1199px) {
+	.videogular-container {
+		width: 940px;
+		height: 528.75px;
+	}
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+	.videogular-container {
+		width: 728px;
+		height: 409.5px;
+	}
+}

@@ -1,0 +1,32 @@
+//Mixins
+@mixin mq($point) {
+	$mq-tabletfull: "(max-width: 1280px),(max-device-width: 1280px) and (orientation: landscape)";
+	$mq-tablet: "(max-width: 960px)";
+	$mq-tablet2: "(max-width: 850px)";
+	$mq-w600: "(max-width: 600px)";
+	$mq-phoneld: "(max-width: 740px) and (orientation:landscape)";
+	$mq-phoneldsm: "(max-width: 480px) and (orientation:landscape)";
+	$mq-phone: "(max-width: 480px),(max-width: 480px) and (orientation:portrait)";
+
+	@if $point == tablet2 {
+		@media #{$mq-tablet2} { @content; }
+	}
+	@if $point == tablet {
+		@media #{$mq-tablet} { @content; }
+	}
+	@if $point == tabletfull {
+		@media #{$mq-tabletfull} { @content; }
+	}
+	@if $point == w600 {
+		@media #{$mq-w600} { @content; }
+	}
+	@else if $point == phoneld {
+		@media #{$mq-phoneld} { @content; }
+	}
+	@else if $point == phoneldsm {
+		@media #{$mq-phoneldsm} { @content; }
+	}
+	@else if $point == phone {
+		@media #{$mq-phone}  { @content; }
+	}
+}

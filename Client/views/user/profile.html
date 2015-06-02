@@ -1,0 +1,92 @@
+<section id="profile">
+	<div class="row">
+		<div class="col-sm-3">
+            <!--left col-->
+			<a class="btn btn-lg btn-block btn-warning ng-click=" ng-href="#/user/update" type="button"><i class="fa fa-pencil-square-o"></i> Edit account</a></br>
+			<ul class="list-group">
+            	<li ng-if="user.created" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-calendar"></i> Joined</strong></span> {{user.created}}</li>
+            	<li ng-if="user.email" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-envelope-o"></i> Email: </strong></span> {{user.email | filter:limit17}}</li>
+            	<li ng-if="user.firstname" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-meh-o"></i> Real name</strong></span>{{user.firstname}}</li>
+            	<li ng-if="user.birthdate" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-birthday-cake"></i> Birthdate</strong></span>{{user.birthdate}}</li>
+            	<li class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-user"></i> Role: </strong></span>Client {{user.role}}</li>
+            	<li class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-sign-out"></i> Last seen</strong></span> Yesterday {{user.update}}</li>
+			</ul>
+
+            <div class="panel panel-default">
+				<div class="panel-heading">Activity</div>
+				<div class="panel-body">
+					<ul class="list-group">
+						<li class=" list-group-item text-right ">
+							<span class="pull-left ">
+								<i class="fa fa-eye "></i>
+								<strong class=" ">Views</strong>
+							</span>13</li>
+						<li class="list-group-item text-right ">
+							<span class="pull-left ">
+								<i class="fa fa-pencil-square-o "></i>
+								<strong class=" ">Videos</strong>
+							</span>37</li>
+					</ul>
+				</div>
+			</div>
+
+            <div class="panel panel-default">
+                <div class="panel-heading">Social Media</div>
+                <div class="panel-body">	
+					<a href="" ><i class="fa fa-facebook fa-2x"></i></a>  
+					<a href="" ><i class="fa fa-github fa-2x"></i></a> 
+                    <a href="" ><i class="fa fa-twitter fa-2x"></i></a> 
+					<a href="" ><i class="fa fa-pinterest fa-2x"></i></a>
+					<a href="" ><i class="fa fa-google-plus fa-2x"></i></a>
+                </div>
+            </div>
+			<button class="btn btn-lg btn-block btn-danger" data-dialog="delete" type="button" ng-dialog><i class="fa fa-trash-o"></i> Delete account</button>
+        </div>
+		<div class="col-sm-9">
+			<div class="page-header">
+				<h1 id="container">Profile</h1>
+			</div>
+			<div class="bs-component">
+				<div class="well">	
+					<ul class="nav nav-tabs">
+						<li class="active"><a href="#dropdown0" data-toggle="tab" aria-expanded="true">You</a></li>
+						<li><a href="#dropdown1" data-toggle="tab" aria-expanded="false">Stats</a>
+						</li>
+					</ul>
+					<div id="myTabContent" class="tab-content">
+						<div class="tab-pane fade active in" id="dropdown0">
+							<ul class="list-group">
+								<li class="list-group-item">
+									<h4><strong>Hello</strong> {{user.firstname}} {{user.lastname}} !</h4>
+								</li>
+							</ul>
+						</div>
+						<div class="tab-pane fade" id="dropdown1">
+							<p>Etsy mixtape wayfarers, ethical wes anderson tofu before they sold out mcsweeney's organic lomo retro fanny pack lo-fi farm-to-table readymade. Messenger bag gentrify pitchfork tattooed craft beer, iphone skateboard locavore carles etsy salvia banksy hoodie helvetica. DIY synth PBR banksy irony. Leggings gentrify squid 8-bit cred pitchfork.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</section>
+<!-- dialog -->
+<div id="delete" class="dialog">
+	<div class="dialog__overlay"></div>
+	<div class="dialog__content">
+		<h2>Are you drunk ?</h2>
+		<div>
+			<button class="btn btn-default btn-danger action" data-dialog-close>No</button>
+			<button class="btn btn-default btn-success" ng-click="submitDelete()">Yes</button>
+		</div>
+	</div>
+</div>
+<!-- /dialog -->
+
+
+<script>
+	$('.nav-tabs a').click(function (e) {
+		e.preventDefault();
+		$(this).tab('show');
+	});
+</script>

@@ -1,0 +1,44 @@
+<div id="video_users" class="row">
+    <div class="rox">
+        <div class="col-md-12">
+            <div class="page-header">
+                <h1 id="container">Videos by {{videos[0]._user.firstname}} {{videos[0]._user.lastname}}</h1>
+            </div>
+        </div>
+    </div>
+    <section class="row grid" ng-repeat="video in videos">
+        <div ng-show="videos.length <= 0" class="bs-component">
+            <div class="jumbotron">
+                <h1>No videos</h1>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="grid3d horizontal">
+                <div class="grid-wrap">
+                    <div class="grid">
+                        <a href="#/video/show/{{video._id}}/">
+                           <figure class="effect-hera">
+                                <img ng-src="{{video.image}}" />
+                                <figcaption>
+                                    <h2>
+                                        <span>{{video.name}}</span>
+                                    </h2>
+                                    <p>
+                                        <a href="#"><i class="fa fa-fw"></i></a>
+                                    </p>
+                                </figcaption>
+                            </figure>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <p>{{video.description}}</p>
+            <p>Created : {{video.created}}</p>
+            <p>Rights : {{video.rights}}</p>
+            <p>Size : {{video.size}}</p>
+            <p>Views : {{video.views}}</p>
+        </div>
+    </section>
+</div>

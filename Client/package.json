@@ -1,0 +1,32 @@
+{
+  "name": "MewPipe",
+  "version": "0.0.2",
+  "description": "MewPipe project",
+  "author": "https://github.com/Adowya/MewPipe/graphs/contributors",
+  "license": "MIT",
+  "homepage": "http://adowya.github.io",
+  "main": "scripts/app.js",
+  "dependencies": {},
+  "devDependencies": {
+    "browser-sync": "^2.7.1",
+    "fs": "0.0.2",
+    "gulp": "^3.8.5",
+    "gulp-concat": "^2.4.1",
+    "gulp-footer": "~1.0.5",
+    "gulp-header": "~1.0.2",
+    "gulp-minify-css": "^0.3.11",
+    "gulp-minify-html": "^0.1.6",
+    "gulp-rename": "~0.2.2",
+    "gulp-ruby-sass": "^1.0.5",
+    "gulp-sourcemaps": "~1.5.1",
+    "gulp-uglifyjs": "~0.6.1",
+    "gulp-watch": "^1.1.0"
+  },
+  "scripts": {
+    "start": "npm install"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/Adowya/MewPipe.git"
+  }
+}

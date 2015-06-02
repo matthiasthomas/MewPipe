@@ -1,0 +1,57 @@
+<div id="video_user" class="row">
+    <div class="col-md-12">
+        <div class="page-header">
+            <h1 id="container">Your videos</h1>
+        </div>
+    </div>
+    <section class="grid" ng-repeat="video in videos">
+        <div ng-show="videos.length <= 0" class="bs-component">
+            <div class="jumbotron">
+                <h1>No videos</h1>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="grid3d horizontal">
+                <div class="grid-wrap">
+                    <div class="grid">
+                        <a href="#/video/show/{{video._id}}/">
+                           <figure class="effect-hera">
+                                <img ng-src="{{video.image}}" />
+                                <figcaption>
+                                    <h2>
+                                        <span>{{video.name}}</span>
+                                    </h2>
+                                    <p>
+                                        <a href="#"><i class="fa fa-fw"></i></a>
+                                    </p>
+                                </figcaption>
+                            </figure>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <aside>
+                <div class="btn-group pull-right">
+                      <a href="javascript;" class="btn btn-primary btn-sm" data-toggle="dropdown">Action</a>
+                      <a href="javascript;" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></a>
+                      <ul class="dropdown-menu">
+                        <li><a href="javascript;"><i class="fa fa-link"></i> Share link</a></li>
+                        <li><a href="javascript;" ng-href="#/video/update/{{video._id}}""><i class="fa fa-pencil-square-o"></i> Edit</a></li>
+                        <li class="divider"></li>
+                        <li><a href="" ng-click="submitDelete(video._id)"><i class="fa fa-trash-o"></i> Delete</a></li>
+                      </ul>
+                    </div>
+                <h4>{{video.name}}</h4>
+                <button popover-placement="bottom" popover="Created" popover-trigger="mouseenter" class="btn btn-default btn-xs"><i class="fa fa-clock-o"></i>{{video.created}}</button>
+                <div class="row" style="padding:15px">
+                    <button popover-placement="bottom" popover="Rights" popover-trigger="mouseenter" class="btn btn-default btn-xs"><i class="fa fa-globe"></i>{{video.rights}}</button>
+                    <button popover-placement="bottom" popover="Size" popover-trigger="mouseenter" class="btn btn-default btn-xs"><i class="fa fa-server"></i>{{video.size}}</button>
+                    <button popover-placement="right" popover="Views" popover-trigger="mouseenter" class="btn btn-default btn-xs"><i class="fa fa-eye"></i>{{video.views}}</button>
+                </div>
+                    
+                <p class="well"><i class="fa fa-comment-o"></i> {{video.description | limit:40}}</p>
+                    
+            </aside>
+        </div>
+    </section>
+</div>

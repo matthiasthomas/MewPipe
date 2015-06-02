@@ -1,0 +1,101 @@
+<div class="row">
+    <div class="col-lg-12">
+        <div class="bs-component">
+            <div class="jumbotron">
+                <h1>Related video</h1>
+                <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+                <div id="index">
+                    <section class="grid3d horizontal" id="relatedVideo">
+                        <div class="grid-wrap">
+                            <div class="grid">
+                                <figure class="effect-hera" ng-repeat="video in relatedVideos">
+                                    <img ng-src="{{video.image}}" />
+                                    <figcaption>
+                                        <h2>
+                                            <span>{{video.name}}</span>
+                                        </h2>
+                                        <p>
+                                            <a>
+                                                <i class="fa fa-play-circle-o"></i>
+                                            </a>
+                                        </p>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                        <!-- /grid-wrap -->
+                        <div class="content">
+                            <div ng-repeat="video in relatedVideos">
+                                <ng-include src="'views/partial/show.html'"></ng-include>
+                            </div>
+                            <span class="loading"></span>
+                            <span class="icon close-content ns-close"></span>
+                        </div>
+                    </section>
+                </div>
+                <p>
+                    <a class="btn btn-primary btn-lg pull-right">Learn more</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="page-header">
+            <h1 id="container">Suggested video</h1>
+        </div>
+        <div class="bs-component">
+            <div class="jumbotron">
+                <p>This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+                <div id="index">
+                    <section class="grid3d horizontal" id="suggestedVideo">
+                        <div class="grid-wrap">
+                            <div class="grid">
+                                <figure class="effect-hera" ng-repeat="suggestVideo in suggestVideos">
+                                    <img ng-src="{{suggestVideo.image}}" />
+                                    <figcaption>
+                                        <h2>
+                                            <span>{{suggestVideo.name}}</span>
+                                        </h2>
+                                        <p>
+                                            <a href="#">
+                                                <i class="fa fa-play-circle-o"></i>
+                                            </a>
+                                        </p>
+                                    </figcaption>
+                                </figure>
+                            </div>
+                        </div>
+                        <!-- /grid-wrap -->
+                        <div class="content">
+                            <div ng-repeat="video in suggestVideos">
+                                <ng-include src="'views/partial/show.html'"></ng-include>
+                            </div>
+                            <span class="loading"></span>
+                            <span class="icon close-content ns-close"></span>
+                        </div>
+                    </section>
+                </div>
+                <p>
+                    <a class="btn btn-primary btn-lg pull-right">Learn more</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="page-header">
+            <h1 id="container">Mewpipe in Wolrd</h1>
+        </div>
+        <div class="jumbotron">
+            <img class="image_right" src="./images/5.jpg" alt="Lorem ipsum">
+                <p>Quam ob rem vita quidem talis fuit vel fortuna vel gloria, ut nihil posset accedere, moriendi autem sensum celeritas abstulit; quo de genere mortis difficile dictu est; quid homines suspicentur, videtis; hoc vere tamen licet dicere, P. Scipioni ex multis diebus, quos in vita celeberrimos laetissimosque viderit, illum diem clarissimum fuisse, cum senatu dimisso domum reductus ad vesperum est a patribus conscriptis, populo Romano, sociis et Latinis, pridie quam excessit e vita, ut ex tam alto dignitatis gradu ad superos videatur deos potius quam ad inferos pervenisse.</p>
+                <p>Haec igitur Epicuri non probo, inquam. De cetero vellem equidem aut ipse doctrinis fuisset instructior est enim, quod tibi ita videri necesse est, non satis politus iis artibus, quas qui tenent, eruditi appellantur aut ne deterruisset alios a studiis. quamquam te quidem video minime esse deterritum.</p>
+                <p>Vbi curarum abiectis ponderibus aliis tamquam nodum et codicem difficillimum Caesarem convellere nisu valido cogitabat, eique deliberanti cum proximis clandestinis conloquiis et nocturnis qua vi, quibusve commentis id fieret, antequam effundendis rebus pertinacius incumberet confidentia, acciri mollioribus scriptis per simulationem tractatus publici nimis urgentis eundem placuerat Gallum, ut auxilio destitutus sine ullo interiret obstaculo.</p>
+                <p>Haec subinde Constantius audiens et quaedam referente Thalassio doctus, quem eum odisse iam conpererat lege communi, scribens ad Caesarem blandius adiumenta paulatim illi subtraxit, sollicitari se simulans ne, uti est militare otium fere tumultuosum, in eius perniciem conspiraret, solisque scholis iussit esse contentum palatinis et protectorum cum Scutariis et Gentilibus, et mandabat Domitiano, ex comite largitionum, praefecto ut cum in Syriam venerit, Gallum, quem crebro acciverat, ad Italiam properare blande hortaretur et verecunde.</p>
+                <img class="image_left" src="./images/3.jpg" alt="Lorem ipsum">
+                    <p>Novo denique perniciosoque exemplo idem Gallus ausus est inire flagitium grave, quod Romae cum ultimo dedecore temptasse aliquando dicitur Gallienus, et adhibitis paucis clam ferro succinctis vesperi per tabernas palabatur et conpita quaeritando Graeco sermone, cuius erat inpendio gnarus, quid de Caesare quisque sentiret. et haec confidenter agebat in urbe ubi pernoctantium luminum claritudo dierum solet imitari fulgorem. postremo agnitus saepe iamque, si prodisset, conspicuum se fore contemplans, non nisi luce palam egrediens ad agenda quae putabat seria cernebatur. et haec quidem medullitus multis gementibus agebantur.</p>
+                    <p>
+                        <a class="btn btn-primary btn-lg pull-right">Learn more</a>
+                    </p>
+                </div>
+            </div>
+        </div>

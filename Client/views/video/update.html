@@ -1,0 +1,84 @@
+<section id="update">
+    <div class="page-header">
+        <label for="inputName" class="col-lg-2 control-label">Name</label>
+        <input type="text" class="form-control input-lg" ng-model="video.name" ng-value="video.name" id="inputName" placeholder="Name">
+    </div>
+    <div class="col-md-8">
+        <h4>{{user.firstname}} {{user.lastname}}</h4>
+        <videogular vg-theme="video.theme">
+            <vg-media vg-src="video.sources"></vg-media>
+            <vg-controls>
+                <vg-play-pause-button></vg-play-pause-button>
+                <vg-time-display>{{ currentTime | date:'mm:ss' }}</vg-time-display>
+                <vg-scrub-bar>
+                    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                </vg-scrub-bar>
+                <vg-time-display>{{ timeLeft | date:'mm:ss' }}</vg-time-display>
+                <vg-time-display>{{ totalTime | date:'mm:ss' }}</vg-time-display>
+                <vg-volume>
+                    <vg-mute-button></vg-mute-button>
+                    <vg-volume-bar></vg-volume-bar>
+                </vg-volume>
+                <vg-fullscreen-button></vg-fullscreen-button>
+            </vg-controls>
+            <vg-overlay-play></vg-overlay-play>
+            <vg-poster vg-url='video.plugins.poster'></vg-poster>
+        </videogular>
+        <div class="well well-lg">
+            <ul>
+                <li>Post: {{video.created}}</li>
+                <li>View: {{video.views}}</li>
+                <li>Size : {{video.size}}</li>
+                <li></li>
+            </ul>
+            <ul>
+                <li>
+                    <i class="icon-facebook-squared primary"></i>
+                    <i class="icon-twitter"></i>
+                    <i class="icon-pinterest"></i>
+                    <i class="icon-gplus"></i>
+                </li>
+            </ul>
+        </div>
+        <form class="form-horizontal">
+            <fieldset>
+                <legend>Informations</legend>
+                <div class="form-group">
+                    <label for="textArea" class="col-lg-2 control-label">Description</label>
+                    <div class="col-lg-10">
+                        <textarea class="form-control" rows="3" id="textArea" ng-model="video.description"></textarea>
+                        <span class="help-block">A longer block of help text that breaks onto a new line and may extend beyond one line.</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="col-lg-2 control-label">Rights</label>
+                    <div class="col-lg-10">
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" ng-model="video.rights" value="public" checked="checked">Public</label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" ng-model="video.rights" value="link">Private link</label>
+                        </div>
+                        <div class="radio">
+                            <label>
+                                <input type="radio" name="optionsRadios" ng-model="video.rights" value="private">Private</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-lg-10 col-lg-offset-2">
+                        <button type="submit" class="btn btn-primary" ng-click="submitUpdate()">Submit</button>
+                    </div>
+                </div>
+            </fieldset>
+        </form>
+    </div>
+    <div class="col-md-4">
+        <section class="well bs-component">
+            <h2>Related</h2>
+            <aside></aside>
+        </section>
+    </div>
+</section>
