@@ -2,7 +2,7 @@
 var MewPipeModule = angular.module('ServiceModule', []);
 MewPipeModule.factory('$authService', [
 	'$rootScope', '$http', '$location', '$callService', '$q',
-	function ($rootScope, $http, $location, $callService, $q) {
+	function($rootScope, $http, $location, $callService, $q) {
 
 		var $authService = {
 			userId: null,
@@ -14,33 +14,31 @@ MewPipeModule.factory('$authService', [
 		return $authService;
 
 		function isLoggedIn(redirectToLogin) {
-			return $http.get(config.getApiAddr() + config.api.route['auth_user'],
-				{
+			return $http.get(config.getApiAddr() + config.api.route['auth_user'], {
 					headers: {
 						'x-access-token': $rootScope.app.getToken()
 					}
 				})
 				.then(
-				function (res) {
-					$authService.userId = res.data.data._id;
-					return {
-						'userId': $authService.userId
-					};
-				},
-				function (error) {
-				})
+					function(res) {
+						$authService.userId = res.data.data._id;
+						return {
+							'userId': $authService.userId
+						};
+					},
+					function(error) {})
 		}
 
 		function login(user) {
 			if ($rootScope.app.getToken()) {
-				return $rootScope.app.showNotif('You don\'t allow.', 'error');
+				return $rootScope.app.showNotif('You are not allowed to do that.', 'error');
 			} else {
-				return $callService.request('POST', 'auth_login', null, user, null).then(function (data) {
+				return $callService.request('POST', 'auth_login', null, user, null).then(function(data) {
 					if (data) {
 						localStorage.setItem('token', data.token);
 						$location.path('/user/profile');
 						return true;
-					}else {
+					} else {
 						return false;
 					}
 				});
@@ -49,7 +47,7 @@ MewPipeModule.factory('$authService', [
 
 		function logout() {
 			if ($rootScope.app.getToken()) {
-				$callService.request(null, 'auth_logout', null, null, true).then(function (data) {
+				$callService.request(null, 'auth_logout', null, null, true).then(function(data) {
 					if (data) {
 						$rootScope.isConnect = false;
 						config.storage.delete('token');
@@ -59,8 +57,9 @@ MewPipeModule.factory('$authService', [
 					}
 				});
 			} else {
-				$rootScope.app.showNotif('You don\'t allow.', 'error');
+				$rootScope.app.showNotif('You are not allowed to do that.', 'error');
 			}
 		}
 
-	}]);  
+	}
+]);

@@ -1,7 +1,7 @@
 var mongoose = require('./Db.js').mongoose;
 
 videoSchema = mongoose.Schema({
-	_user: { 
+	_user: {
 		type: String,
 		required: true,
 		ref: 'User'
@@ -11,8 +11,7 @@ videoSchema = mongoose.Schema({
 		required: true
 	},
 	description: {
-		type: String,
-		required: true
+		type: String
 	},
 	size: {
 		type: Number,
@@ -22,7 +21,7 @@ videoSchema = mongoose.Schema({
 		type: String,
 		required: true
 	},
-	rights: { 
+	rights: {
 		type: String,
 		required: true,
 		enum: ['public', 'private', 'link'],

@@ -26,7 +26,7 @@ config.thumbnailsDirectory = config.storageDirectory + "/thumbnails";
 config.tmpDirectory = config.storageDirectory + "/.tmp";
 config.videoAllowedExt = ["mp4", "avi", "mkv"];
 config.maxVideoSize = 524288000;
-config.thumbnailsSize = "300x300"; //Eg: 300x300, 300x?, ?x300
+config.thumbnailsSize = "300x?"; //Eg: 300x300, 300x?, ?x300
 config.videoDirectory = config.storageDirectory + "/videos";
 
 // oAuth properties

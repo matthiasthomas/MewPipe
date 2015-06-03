@@ -27,9 +27,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	});
 
 
-	/**
-	 * auth LOCAL
-	 **/
+	/** auth LOCAL **/
 	app.post('/auth/local', function(req, res, next) {
 		modules.auth.authenticate('local', {}, function(err, user, info) {
 			if (err || !user) {

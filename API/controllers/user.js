@@ -28,30 +28,6 @@
  	});
 
  	/**
- 	 * READ ALL BY USERNAME
- 	 **/
- 	// router.post('/users/findByUsername', function(req, res){
- 	// 	if(req.body.username){
- 	// 		var regExSearch = new RegExp(req.body.username, 'i');
- 	// 		models.User.find()
- 	// 		.select("firstname lastname email birthdate")
- 	// 		.or([{'username': {$regex: regExSearch}}])
- 	// 		.exec(function(err, users){
- 	// 			if(err){
- 	// 				if(config.debug == true){
- 	// 					console.log({"error_GET_user": err});
- 	// 				}
- 	// 				res.json({"success": false, "error": "An error occurred."});
- 	// 			}else{
- 	// 				res.json({"success": true, "users": users});
- 	// 			}
- 	// 		});
- 	// 	}else{
- 	// 		res.json({"success": false, "error": "Missing 'username' field."});
- 	// 	}
- 	// });
-
- 	/**
  	 * READ ONE
  	 **/
  	router.get("/user", middlewares.checkAuth, function(req, res) {

@@ -12,7 +12,6 @@ var modules = {
 	_: require('lodash-node'),
 	crypto: require("crypto"),
 	auth: require(__dirname + "/auth.js"),
-	multipart: require('connect-multiparty'),
 	url: require('url'),
 	hbjs: require("handbrake-js"),
 	path: require("path"),
@@ -40,6 +39,7 @@ modules.fs.readdirSync(__dirname + "/models").forEach(function(file) {
  * EXPRESS
  **/
 var express = require("express");
+var multer = require('multer');
 var errorHandler = require('errorhandler');
 var bodyParser = require('body-parser');
 var router = express.Router();
@@ -54,8 +54,8 @@ app.use(bodyParser.urlencoded({
 app.use(modules.auth.initialize());
 app.use(modules.auth.session());
 if (!config.debug) {
-	app.use(errorHandler());
 	app.use(morgan('combined', {}));
+	app.use(errorHandler());
 }
 
 /**
@@ -64,8 +64,11 @@ if (!config.debug) {
 var middlewares = require(__dirname + "/middlewares.js");
 middlewares.controller(app, config, modules, models, middlewares, sessions);
 app.all("*", middlewares.header);
-app.use('/api', router);
 
+// Multipart form (for file upload)
+app.use(multer({
+	dest: config.tmpDirectory
+}));
 
 /**
  * CONTROLLERS
@@ -76,6 +79,10 @@ modules.fs.readdirSync(__dirname + "/controllers").forEach(function(file) {
 		route.controller(app, router, config, modules, models, middlewares, sessions);
 	}
 });
+
+// REGISTER OUR ROUTES -------------------------------
+// all of our routes will be prefixed with /api
+app.use('/api', router);
 
 /**
  * CREATE STORAGE DIR

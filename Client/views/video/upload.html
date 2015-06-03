@@ -34,7 +34,7 @@
 					<div class="panel-body">
 						<div class="form-group">
 							<label for="inputName" class="col-lg-2 control-label">Title</label>
-							<input type="text" class="form-control input-lg" ng-value="file.name" id="inputTitle">
+							<input type="text" class="form-control input-lg" ng-model="file.title" ng-init="file.title = file.name" id="inputTitle">
 						</div>
 						<div class="form-group">
 							<label for="textArea" class="col-lg-2 control-label">Description</label>
