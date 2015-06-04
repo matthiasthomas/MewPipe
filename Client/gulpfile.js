@@ -19,75 +19,81 @@ var browserSync = require('browser-sync');
 var reload = browserSync.reload;
 
 var config = {
-  pkg : JSON.parse(fs.readFileSync('./package.json')),
-  banner:
-  '/*!\n' +
-  ' * <%= pkg.name %>\n' +
-  ' * <%= pkg.author %>\n' +
-  ' * Version: <%= pkg.version %> - <%= timestamp %>\n' +
-  ' * License: <%= pkg.license %>\n' +
-  ' */\n\n\n',
-  lib:[
-  "./lib/angular/angular.js",
-  "./lib/angular-animate/angular-animate.js",
-  "./lib/angular-bootstrap/ui-bootstrap.js",
-  "./lib/angular-bootstrap/ui-bootstrap-tpls.js",
-  "./lib/angular-cookies/angular-cookies.js",
-  "./lib/angular-moment/angular-moment.js",
-  "./lib/angular-resource/angular-resource.js",
-  "./lib/angular-route/angular-route.js",
-  "./lib/angular-sanitize/angular-sanitize.js",
-  "./lib/angular-touch/angular-touch.js",
-  "./lib/jquery/dist/jquery.min.js",
-  "./lib/classie/classie.js",
-  "./lib/moment/moment.js",
-  "./lib/bootswatch-dist/js/bootstrap.js",  
-  "./lib/ng-file-upload/ng-file-upload-shim.js",
-  "./lib/ng-file-upload/ng-file-upload.js",
-  "./lib/videogular/videogular.js",
-  "./lib/videogular-buffering/vg-buffering.js",
-  "./lib/videogular-controls/vg-controls.js",
-  "./lib/videogular-ima-ads/vg-ima-ads.js",
-  "./lib/videogular-overlay-play/vg-overlay-play.js",
-  "./lib/videogular-poster/vg-poster.js"
+  pkg: JSON.parse(fs.readFileSync('./package.json')),
+  banner: '/*!\n' +
+    ' * <%= pkg.name %>\n' +
+    ' * <%= pkg.author %>\n' +
+    ' * Version: <%= pkg.version %> - <%= timestamp %>\n' +
+    ' * License: <%= pkg.license %>\n' +
+    ' */\n\n\n',
+  lib: [
+    "./lib/async/lib/async.js",
+    "./lib/angular/angular.js",
+    "./lib/angular-animate/angular-animate.js",
+    "./lib/angular-bootstrap/ui-bootstrap.js",
+    "./lib/angular-bootstrap/ui-bootstrap-tpls.js",
+    "./lib/angular-cookies/angular-cookies.js",
+    "./lib/angular-moment/angular-moment.js",
+    "./lib/angular-resource/angular-resource.js",
+    "./lib/angular-route/angular-route.js",
+    "./lib/angular-sanitize/angular-sanitize.js",
+    "./lib/angular-touch/angular-touch.js",
+    "./lib/jquery/dist/jquery.min.js",
+    "./lib/classie/classie.js",
+    "./lib/moment/moment.js",
+    "./lib/bootswatch-dist/js/bootstrap.js",
+    "./lib/ng-file-upload/ng-file-upload-shim.js",
+    "./lib/ng-file-upload/ng-file-upload.js",
+    "./lib/videogular/videogular.js",
+    "./lib/videogular-buffering/vg-buffering.js",
+    "./lib/videogular-controls/vg-controls.js",
+    "./lib/videogular-ima-ads/vg-ima-ads.js",
+    "./lib/videogular-overlay-play/vg-overlay-play.js",
+    "./lib/videogular-poster/vg-poster.js"
   ]
 };
 
 // task CSS/SCSS
 gulp.task('sass', function() {
-  return sass('./styles/scss/global.scss', { compass: true, sourcemap: true, noCache : true, style: 'compact' })
-    .on('error', function (err) {
+  return sass('./styles/scss/global.scss', {
+      compass: true,
+      sourcemap: true,
+      noCache: true,
+      style: 'compact'
+    })
+    .on('error', function(err) {
       console.error('Error', err.message);
-   })
-  .pipe(header(config.banner, {
-    timestamp: (new Date()).toISOString(), pkg: config.pkg
-  }))
-  .pipe(concat('style.css'))
-  .pipe(gulp.dest('./styles'));
+    })
+    .pipe(header(config.banner, {
+      timestamp: (new Date()).toISOString(),
+      pkg: config.pkg
+    }))
+    .pipe(concat('style.css'))
+    .pipe(gulp.dest('./styles'));
 });
 
 // task JS 
-gulp.task('js', ['js-lib'], function () {
+gulp.task('js', ['js-lib'], function() {
   gulp.src('./scripts/**/*.js')
-  .pipe(header(config.banner+'(function () { \n"use strict";\n\n', {
-    timestamp: (new Date()).toISOString(), pkg: config.pkg
-  }))
-  .pipe(footer('\n}());'))
-    // .pipe(gulp.dest('./dist/js'));
-  });
+    .pipe(header(config.banner + '(function () { \n"use strict";\n\n', {
+      timestamp: (new Date()).toISOString(),
+      pkg: config.pkg
+    }))
+    .pipe(footer('\n}());'));
+});
 
-gulp.task('js-lib', function(){
+gulp.task('js-lib', function() {
   return gulp.src(config.lib)
-  .pipe(sourcemaps.init())
-  .pipe(concat('lib.concat.js'))
-  // .pipe(uglify({
-  //   compress: {
-  //     negate_iife: false
-  //   }
-  // }))
-  .pipe(rename('lib.min.js'))
-  .pipe(sourcemaps.write('./'))
-  .pipe(gulp.dest('./lib'));
+    .pipe(sourcemaps.init())
+    .pipe(concat('lib.concat.js'))
+    // .pipe(uglify({
+    //   compress: {
+    //     negate_iife: false
+    //   }
+    // }))
+    .pipe(rename('lib.min.js'))
+    .pipe(sourcemaps.write('./'))
+    .pipe(gulp.dest('./lib'));
 });
 
 // task watch
@@ -98,7 +104,7 @@ gulp.task('watch', function() {
 });
 
 // task default
-gulp.task('default', ['sass', 'js', 'watch'], function () {
+gulp.task('default', ['sass', 'js', 'watch'], function() {
   browserSync({
     notify: false,
     // https: true,

@@ -66,7 +66,7 @@ MewPipeModule.factory('$callService', [
 								return true;
 							}
 						} else {
-							return $rootScope.app.showNotif(res.data.error, 'error');
+							return $rootScope.app.display(res.data.error, 'error');
 						}
 					},
 					function(error) {
@@ -94,17 +94,15 @@ MewPipeModule.factory('$callService', [
 						if (res.success) {
 							callback(res);
 						} else {
-							if (config.debug) {
-								console.log('error', res);
-							}
+							console.log('error', res);
 							if (res.error.errors) {
 								for (var i in res.error.errors) {
 									if (res.error.errors.hasOwnProperty(i)) {
-										$rootScope.app.showNotif(res.error.errors[i].message, 'error');
+										$rootScope.app.display(res.error.errors[i].message, 'error');
 									}
 								}
 							} else {
-								$rootScope.app.showNotif(res.error, 'error');
+								$rootScope.app.display(res.error, 'error');
 							}
 						}
 					})

@@ -31,7 +31,7 @@ MewPipeModule.factory('$authService', [
 
 		function login(user) {
 			if ($rootScope.app.getToken()) {
-				return $rootScope.app.showNotif('You are not allowed to do that.', 'error');
+				return $rootScope.app.display('You are not allowed to do that.', 'error');
 			} else {
 				return $callService.request('POST', 'auth_login', null, user, null).then(function(data) {
 					if (data) {
@@ -53,11 +53,11 @@ MewPipeModule.factory('$authService', [
 						config.storage.delete('token');
 						$location.path('/');
 					} else {
-						$rootScope.app.showNotif(data, 'notice');
+						$rootScope.app.display(data, 'notice');
 					}
 				});
 			} else {
-				$rootScope.app.showNotif('You are not allowed to do that.', 'error');
+				$rootScope.app.display('You are not allowed to do that.', 'error');
 			}
 		}
 

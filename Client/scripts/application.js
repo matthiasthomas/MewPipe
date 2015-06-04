@@ -37,7 +37,7 @@ mewPipeApp.run([
 			$rootScope.isConnect = false;
 			config.storage.delete('token');
 			$location.path("/");
-			$rootScope.app.showNotif('You are not allowed to do that.', 'error');
+			$rootScope.app.display('You are not allowed to do that.', 'error');
 		});
 
 		/**
@@ -125,7 +125,7 @@ mewPipeApp.run([
 			 * @msg String message to show
 			 * @Type String 'notice', 'warning', 'error' or 'success'
 			 */
-			showNotif: function(msg, type) {
+			display: function(msg, type) {
 				setTimeout(function() {
 					if (flag) return;
 					flag = true;

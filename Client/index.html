@@ -49,11 +49,11 @@
 						<a href="" ng-if="!isConnect" data-dialog="signUp" class="btn btn-default pull-right" ng-dialog>Sign Up</a>
 					</div>
 					<a href="" style="position: absolute;right: 0;" ng-show="isConnect" ng-if="isConnect" ng-click="logOut()" class="btn btn-primary pull-right">Log out <i class="fa fa-power-off pl"></i></a>
-						
+
 					<a href="#/">
 						<img class="center" src="images/logo.png">
 					</a>
-					<p class="lead center">We must do what nobody <a href="#/">doing for you</a></p>
+					<p class="lead center">Share and discover wonderful videos</p>
 					<nav class="cl-effect-5 center" ng-if="isConnect">
 						<a href="#/"><span data-hover="Home">Home</span></a>
 						<a href="#/video/user/"><span data-hover="My&nbsp;video">My video</span></a>
@@ -84,14 +84,6 @@
 		<div ng-view> </div>
 		<!-- /angular view  -->
 
-		<!-- btn go top -->
-		<div class="row">
-			<div class="col-md-12">
-				<a class="btn btn-default pull-right elevator" href="javascript:void(0);">Go to top</a>
-			</div>
-		</div>
-		<!-- /btn go top -->
-
 		<!-- dialog -->
 		<div id="signIn" class="dialog">
 			<div class="dialog__overlay"></div>
@@ -115,183 +107,170 @@
 								<div class="checkbox">
 									<label>
 										<input type="checkbox">Remeber me</label>
+									</div>
 								</div>
 							</div>
-						</div>
-					</fieldset>
+						</fieldset>
 
-				<div class="col-md-12">
-					<div class="well-lg">
-						<a ng-href="{{app.getApi()+'/auth/facebook'}}"><i class="fa fa-facebook fa-2x pr"></i></a>
-						<a ng-href="{{app.getApi()+'/auth/google'}}"><i class="fa fa-google-plus fa-2x pl"></i></a>
-						<a href="" ng-click="submitSupinfo()" ><img src="images/logo-sup.png"></a>
+						<div class="col-md-12">
+							<div class="well-lg">
+								<a ng-href="{{app.getApi()+'/auth/facebook'}}"><i class="fa fa-facebook fa-2x pr"></i></a>
+								<a ng-href="{{app.getApi()+'/auth/google'}}"><i class="fa fa-google-plus fa-2x pl"></i></a>
+								<a href="" ng-click="submitSupinfo()" ><img src="images/logo-sup.png"></a>
+							</div>
+						</div>
+						<div>
+							<button class="btn btn-default btn-danger action" data-dialog-close>Close</button>
+							<button class="btn btn-default btn-danger action" ng-click="submitLogin()" type="submit" id="submit" value="Submit">Login</button>
+						</div>
+					</form>
+
+				</div>
+			</div>
+
+
+			<div id="signUp" class="dialog">
+				<div class="dialog__overlay"></div>
+				<div class="dialog__content">
+					<form class="form-horizontal" ng-submit="submitRegister()">
+						<fieldset>
+							<h2>
+								<strong>Sign up</strong> :
+							</h2>
+							<div class="form-group">
+								<label for="inputLastName" class="col-lg-2 control-label">Lastname</label>
+								<div class="col-lg-10">
+									<input type="text" class="form-control input" ng-model="user.lastname" ng-value="user.lastname" id="inputLastname" placeholder="Lastname">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputFirstname" class="col-lg-2 control-label">Firstname</label>
+								<div class="col-lg-10">
+									<input type="text" class="form-control input" ng-model="user.firstname" ng-value="user.firstname" id="inputFirstname"
+									placeholder="Firstname">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputEmail" class="col-lg-2 control-label">Email</label>
+								<div class="col-lg-10">
+									<input type="email" class="form-control" ng-model="user.email" id="inputEmail" placeholder="Email">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputPassword" class="col-lg-2 control-label">Password</label>
+								<div class="col-lg-10">
+									<input type="password" class="form-control" ng-model="user.password" id="inputPassword" placeholder="Password">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="inputPassword" class="col-lg-2 control-label">Birthdate</label>
+								<div class="col-lg-10">
+									<input type="date" class="form-control" ng-model="user.birthdate" id="inputBirthdate" placeholder="Birthdate">
+								</div>
+							</div>
+						</fieldset>
+					</form>
+					<div>
+						<button class="btn btn-default btn-danger action" data-dialog-close>Close</button>
+						<button class="btn btn-default btn-info action" ng-click="submitRegister()" type="submit" id="submit" value="Submit">Create</button>
 					</div>
 				</div>
-				<div>
-					<button class="btn btn-default btn-danger action" data-dialog-close>Close</button>
-					<button class="btn btn-default btn-danger action" ng-click="submitLogin()" type="submit" id="submit" value="Submit">Login</button>
-				</div>
-				</form>
-				
 			</div>
+			<!-- /dialog -->
+
 		</div>
-		
-		
-		<div id="signUp" class="dialog">
-			<div class="dialog__overlay"></div>
-			<div class="dialog__content">
-				<form class="form-horizontal" ng-submit="submitRegister()">
-					<fieldset>
-						<h2>
-							<strong>Sign up</strong> :
-						</h2>
-						<div class="form-group">
-							<label for="inputLastName" class="col-lg-2 control-label">Lastname</label>
-							<div class="col-lg-10">
-								<input type="text" class="form-control input" ng-model="user.lastname" ng-value="user.lastname" id="inputLastname" placeholder="Lastname">
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="inputFirstname" class="col-lg-2 control-label">Firstname</label>
-							<div class="col-lg-10">
-								<input type="text" class="form-control input" ng-model="user.firstname" ng-value="user.firstname" id="inputFirstname"
-								placeholder="Firstname">
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="inputEmail" class="col-lg-2 control-label">Email</label>
-							<div class="col-lg-10">
-								<input type="email" class="form-control" ng-model="user.email" id="inputEmail" placeholder="Email">
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="inputPassword" class="col-lg-2 control-label">Password</label>
-							<div class="col-lg-10">
-								<input type="password" class="form-control" ng-model="user.password" id="inputPassword" placeholder="Password">
-							</div>
-						</div>
-						
-						<div class="form-group">
-							<label for="inputPassword" class="col-lg-2 control-label">Birthdate</label>
-							<div class="col-lg-10">
-								<input type="date" class="form-control" ng-model="user.birthdate" id="inputBirthdate" placeholder="Birthdate">
-							</div>
-						</div>
-					</fieldset>
-				</form>
-				<div>
-					<button class="btn btn-default btn-danger action" data-dialog-close>Close</button>
-					<button class="btn btn-default btn-info action" ng-click="submitRegister()" type="submit" id="submit" value="Submit">Create</button>
+		<!-- footer -->
+		<footer>
+			<div class="row">
+				<div class="col-lg-12">
+					<span class="text-center">
+						<a href="#/">
+							<img class="center" src="images/icon-mew-pipe.png" alt="icon-app"/>
+						</a>
+						<small class="center">© 2015 - Supinfo VC</small>
+					</span>
+					<ul class="center">
+						<li>
+							<a target="_blank" href="https://github.com/">Github</a>
+						</li>
+						<li>
+							<a target="_blank" href="https://twitter.com/">Twitter</a>
+						</li>
+						<li>
+							<a target="_blank" href="https://www.facebook.com/">Facebook</a>
+						</li>
+						<li>
+							<a target="_blank" href="https://plus.google.com/communities/">Google+</a>
+						</li>
+					</ul>
 				</div>
 			</div>
-		</div>
-		<!-- /dialog -->
+		</footer>
+		<!-- /footer -->
 
-	</div>
-	<!-- footer -->
-	<footer>
-		<div class="row">
-			<div class="col-lg-12">
-				<span class="text-center">
-					<a href="#/">
-					<img class="center" src="images/icon-mew-pipe.png" alt="icon-app"/>
-					</a>
-					<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer posuere erat a ante.</p>
-					<small class="center">© 2014 - SUPINFO@CAEN <cite title="Source Title">Inc</cite></small>
-				</span>
-				<ul class="center">
-					<li>
-						<a target="_blank" href="https://github.com/">Github</a>
-					</li>
-					<li>
-						<a target="_blank" href="https://twitter.com/">Twitter</a>
-					</li>
-					<li>
-						<a target="_blank" href="https://www.facebook.com/">Facebook</a>
-					</li>
-					<li>
-						<a target="_blank" href="https://plus.google.com/communities/">Google+</a>
-					</li>
-				</ul>
-			</div>
-		</div>
-	</footer>
-	<!-- /footer -->
-
-	<!-- Grab Google CDN's jQuery, fall back to local if offline -->
-	<!-- 2.0 for modern browsers, 1.10 for .oldie -->
-	<script>
-		var oldieCheck = Boolean(document.getElementsByTagName('html')[0].className.match(/\soldie\s/g));
-		if (!oldieCheck) {
-			document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"><\/script>');
-		} else {
-			document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"><\/script>');
-		}
-		if (!window.jQuery) {
+		<!-- Grab Google CDN's jQuery, fall back to local if offline -->
+		<!-- 2.0 for modern browsers, 1.10 for .oldie -->
+		<script>
+			var oldieCheck = Boolean(document.getElementsByTagName('html')[0].className.match(/\soldie\s/g));
+			if (!oldieCheck) {
+				document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"><\/script>');
+			} else {
+				document.write('<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.1/jquery.min.js"><\/script>');
+			}
+			if (!window.jQuery) {
 				document.write('<script src="lib/jquery/dist/jquery.min.js"><\/script>');
-		}
-	</script>
+			}
+		</script>
 
-	<!-- Libs -->
-	<script src="/lib/lib.min.js"></script>
+		<!-- Libs -->
+		<script src="/lib/lib.min.js"></script>
 
-	<!-- Plugin -->
-	<script src="/scripts/plugin/elevator.js"></script>
-	<script src="/scripts/plugin/notificationFx.js"></script>
-	<script src="/scripts/plugin/dialogFx.js"></script>
-	<script src="/scripts/plugin/helper.js"></script>
-	<script src="/scripts/plugin/grid3d.js"></script>
-	<script src="/scripts/plugin/progressButton.js"></script>
+		<!-- Plugin -->
+		<script src="/scripts/plugin/notificationFx.js"></script>
+		<script src="/scripts/plugin/dialogFx.js"></script>
+		<script src="/scripts/plugin/helper.js"></script>
+		<script src="/scripts/plugin/grid3d.js"></script>
+		<script src="/scripts/plugin/progressButton.js"></script>
 
-	<!-- Configuration -->
-	<script src="/scripts/config.js"></script>
-	<script src="/scripts/application.js"></script>
-	<script src="/scripts/route.js"></script>
-	<script src="/scripts/function.js"></script>
+		<!-- Configuration -->
+		<script src="/scripts/config.js"></script>
+		<script src="/scripts/application.js"></script>
+		<script src="/scripts/route.js"></script>
+		<script src="/scripts/function.js"></script>
 		
-	<!-- Services  -->
-	<script src="/scripts/services/auth.js"></script>
-	<script src="/scripts/services/call.js"></script>
-	<script src="/scripts/services/video.js"></script>
+		<!-- Services  -->
+		<script src="/scripts/services/auth.js"></script>
+		<script src="/scripts/services/call.js"></script>
+		<script src="/scripts/services/video.js"></script>
 
-	<!-- Controllers -->
-	<script src="/scripts/controller.js"></script>
-	<script src="/scripts/controllers/user/profile.js"></script>
-	<script src="/scripts/controllers/user/update.js"></script>
-	<script src="/scripts/controllers/video/upload.js"></script>
-	<script src="/scripts/controllers/video/search.js"></script>
-	<script src="/scripts/controllers/video/show.js"></script>
-	<script src="/scripts/controllers/video/update.js"></script>
-	<script src="/scripts/controllers/video/user.js"></script>
+		<!-- Controllers -->
+		<script src="/scripts/controller.js"></script>
+		<script src="/scripts/controllers/user/profile.js"></script>
+		<script src="/scripts/controllers/user/update.js"></script>
+		<script src="/scripts/controllers/video/upload.js"></script>
+		<script src="/scripts/controllers/video/search.js"></script>
+		<script src="/scripts/controllers/video/show.js"></script>
+		<script src="/scripts/controllers/video/update.js"></script>
+		<script src="/scripts/controllers/video/user.js"></script>
 		
 		
 
-	<!-- Directives -->
-	<script src="/scripts/directives/limit.js"></script>
-	<script src="/scripts/directives/dialog.js"></script>
+		<!-- Directives -->
+		<script src="/scripts/directives/limit.js"></script>
+		<script src="/scripts/directives/dialog.js"></script>
 
-	<script>
-		(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-			(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-			m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-		})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+		<script>
+			(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+				(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+				m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+			})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-		ga('create', 'UA-XXXXXXXX-X', 'XXXXXXXXXXX.TLD');
+			ga('create', 'UA-XXXXXXXX-X', 'XXXXXXXXXXX.TLD');
 
-	</script>
-	<script>
-
-		var elementButton = document.querySelector('.elevator');
-		var elevator = new Elevator({
-			element: elementButton,
-			mainAudio: './music/elevator-music.mp3',
-			endAudio:  './music/ding.mp3'
-		});
-
-	</script>
-
-</body>
-</html>
+		</script>
+	</body>
+	</html>

@@ -1,69 +1,58 @@
 module.exports.controller = function(app, router, config, modules, models, middlewares, sessions) {
 
-	var hbjsPercent = {};
+	var hbjsProgress = {};
 
-	var convertVideo = function(videoPath, videoExt, videoId) {
+	var convertVideo = function(videoPath, videoExt, videoId, callback) {
 		modules.hbjs.spawn({
 				input: videoPath + "." + videoExt,
 				output: videoPath + ".mp4",
 				preset: "Normal"
 			})
-			.on("error", function(err) {
-				console.log(err);
-				res.json({
-					"success": false,
-					"error": "Can't convert video."
-				});
+			.on("error", function(error) {
+				return callback("Can't convert video");
 			})
 			.on("progress", function(progress) {
-				console.log("Video converting: %s %, ETA: %s", progress.percentComplete, progress.eta);
-				hbjsPercent[videoId] = {
+				console.log("Converting: %s % | ETA: %s", progress.percentComplete, progress.eta);
+				hbjsProgress[videoId] = {
 					percent: progress.percentComplete,
 					eta: progress.eta
 				};
-				if (progress.percentComplete == 100) {
-					hbjsPercent[videoId] = undefined;
-					models.Video.update({
-						_id: videoId
-					}, {
-						ready: true
-					}, function() {
-						return;
-					});
-					modules.fs.unlink(videoPath + "." + videoExt, function() {
-						return;
-					});
-					genrateThumbnails(videoPath + ".mp4", videoId);
-				}
+			})
+			.on("end", function() {
+				hbjsProgress[videoId] = undefined;
+				modules.fs.unlink(videoPath + "." + videoExt, function(error) {
+					if (error) return callback(error);
+					return callback();
+				});
 			});
 	};
 	/**
 	 * GENERATE THUMBNAILS
 	 **/
-	var genrateThumbnails = function(videoName, videoId) {
-		var proc = modules.ffmpeg(videoName)
-			.on('end', function(files) {
-				return true;
-			})
-			.on('error', function(err) {
-				return false;
-			})
+	var generateThumbnails = function(videoName, videoId, callback) {
+		modules.ffmpeg(videoName)
 			.takeScreenshots({
 				filename: videoId + '.png',
 				size: config.thumbnailsSize,
 				count: 1,
 				timemarks: ['20%']
-			}, config.thumbnailsDirectory);
+			}, config.thumbnailsDirectory)
+			.on('error', function(error) {
+				return callback(error);
+			})
+			.on('end', function(files) {
+				return callback();
+			});
 	};
 
 	/**
 	 * GET CONVERT PERCENT
 	 **/
 	router.get('/videos/getConvertPercent/:vid', function(req, res) {
-		if (hbjsPercent[req.params.vid]) {
+		if (hbjsProgress[req.params.vid]) {
 			return res.json({
 				"success": true,
-				"data": hbjsPercent[req.params.vid]
+				"data": hbjsProgress[req.params.vid]
 			});
 		}
 		return res.json({
@@ -81,8 +70,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	router.get('/videos/download/:vid', function(req, res) {
 		models.Video.findOne({
 			_id: req.params.vid
-		}).exec(function(err, video) {
-			if (err) {
+		}).exec(function(error, video) {
+			if (error) {
 				return res.json({
 					"success": false,
 					"error": "Can't found this video."
@@ -100,8 +89,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	router.get('/videos/play/:vid', middlewares.getUser, middlewares.getIP, function(req, res) {
 		models.Video.findOne({
 			_id: req.params.vid
-		}).exec(function(err, video) {
-			if (err) {
+		}).exec(function(error, video) {
+			if (error) {
 				return res.json({
 					"success": false,
 					"error": "Can't found this video."
@@ -115,13 +104,13 @@ module.exports.controller = function(app, router, config, modules, models, middl
 						_video: video._id,
 						_user: req.mewPipe.user
 					})
-					.exec(function(err, view) {
+					.exec(function(error, view) {
 						if (!view) {
 							var newView = new models.View({
 								_user: req.mewPipe.user,
 								_video: video._id
 							});
-							newView.save(function(err, view) {
+							newView.save(function(error, view) {
 								return;
 							});
 						}
@@ -132,13 +121,13 @@ module.exports.controller = function(app, router, config, modules, models, middl
 						_video: video._id,
 						ipAddr: req.mewPipe.IP
 					})
-					.exec(function(err, view) {
+					.exec(function(error, view) {
 						if (!view) {
 							var newView = new models.View({
 								ipAddr: req.mewPipe.IP,
 								_video: video._id
 							});
-							newView.save(function(err, view) {
+							newView.save(function(error, view) {
 								return;
 							});
 						}
@@ -154,8 +143,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	router.get('/videos/thumbnails/:vid', function(req, res) {
 		models.Video.findOne({
 			_id: req.params.vid
-		}).exec(function(err, video) {
-			if (err) {
+		}).exec(function(error, video) {
+			if (error) {
 				return res.json({
 					"success": false,
 					"error": "Can't found this video."
@@ -181,8 +170,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			.select("-__v -archived")
 			.populate("_user", "-accessToken -__v")
 			.lean()
-			.exec(function(err, video) {
-				if (err) {
+			.exec(function(error, video) {
+				if (error) {
 					return res.json({
 						"success": false,
 						"error": "Can't found this file."
@@ -191,7 +180,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 				models.View.find({
 						_video: video._id
 					})
-					.exec(function(err, views) {
+					.exec(function(error, views) {
 						video.views = views.length;
 						res.json({
 							"success": true,
@@ -206,92 +195,114 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	 * UPLOAD Video File
 	 **/
 	router.post('/videos/upload', middlewares.checkAuth, function(req, res) {
-		if (!req.files.file) {
-			return res.json({
-				"success": false,
-				"error": 'No video received'
-			});
-		}
-		if (req.files.file.size > config.maxVideoSize) {
-			return res.json({
-				"success": false,
-				"error": "Invalid video size (max 500mb)."
-			});
-		}
-		if (req.body.data.title == "undefined" || req.body.data.title == undefined || req.body.data.title.replace(/\s+/g, "") == "") {
-			req.body.data.title = req.files.file.originalname.replace(/\.[^/.]+$/, "");
-		}
-		if (req.body.data.title == "/") {
-			return res.json({
-				"success": false,
-				"error": "Can't use this name."
-			});
-		}
-		var tmp_path = req.files.file.path;
-		var ext = tmp_path.split('.').pop().toLowerCase();
-		if (!modules._.contains(config.videoAllowedExt, ext)) {
-			return res.json({
-				"success": false,
-				"error": "Invalid video extension."
-			});
-		}
-		var metadata = JSON.parse(req.body.data);
-		var newVideo = new models.Video({
-			_user: req.user._id,
-			name: metadata.title,
-			description: metadata.description,
-			size: req.files.file.size,
-			ext: "mp4",
-			rights: metadata.rights,
-			ready: false
-		});
-		newVideo.save(function(err, video) {
-			if (err) {
-				return res.json({
-					"success": false,
-					"error": err
-				});
-			}
-			video.path = "/" + video._id + "." + ext;
-			video.pathNoExt = "/" + video._id;
-			var target_path = config.videoDirectory + video.path;
-			var size = req.files.file.size;
-			modules.fs.rename(tmp_path, target_path, function(err) {
-				if (err) {
+		var tmp_path;
+		var ext;
+		modules.async.waterfall([
+				// Check for errors in filename/size/extension
+				function(callback) {
+					modules.async.parallel({
+							// Was a file sent
+							one: function(subCall) {
+								if (!req.files.file) return subCall("No video received");
+								return subCall();
+							},
+							// Is the size too important
+							two: function(subCall) {
+								if (req.files.file.size > config.maxVideoSize) return subCall("Invalid video size (max 500mb)");
+								return subCall();
+							},
+							// Is the name right
+							three: function(subCall) {
+								if (req.body.data.title == "undefined" || req.body.data.title === undefined || req.body.data.title.replace(/\s+/g, "") === "") {
+									req.body.data.title = req.files.file.originalname.replace(/\.[^/.]+$/, "");
+								}
+								if (req.body.data.title == "/" ||  req.body.data.title === "") return subCall("Can't use this name");
+								return subCall();
+							},
+							// Is the extension right
+							four: function(subCall) {
+								tmp_path = req.files.file.path;
+								ext = tmp_path.split('.').pop().toLowerCase();
+								if (!modules._.contains(config.videoAllowedExt, ext)) return subCall("Invalid video extension");
+								return subCall();
+							}
+						},
+						function(error) {
+							if (error) return callback(error);
+							return callback();
+						});
+				},
+				// Create the video object
+				function(callback) {
+					var metadata = JSON.parse(req.body.data);
+					var newVideo = new models.Video({
+						_user: req.user._id,
+						name: metadata.title,
+						description: metadata.description,
+						size: req.files.file.size,
+						ext: "mp4",
+						rights: metadata.rights,
+						ready: false
+					});
+					newVideo.save(function(error, video) {
+						if (error) return callback(error);
+						return callback(null, video);
+					});
+				},
+				// Move the file to its new folder
+				function(video, callback) {
+					video.pathNoExt = "/" + video._id;
+					video.path = video.pathNoExt + "." + ext;
+					var target_path = config.videoDirectory + video.path;
+					var size = req.files.file.size;
+					modules.fs.rename(tmp_path, target_path, function(error) {
+						if (error) return callback(error);
+						return callback(null, video);
+					});
+				},
+				// Convert the video to mp4 if it isn't
+				function(video, callback) {
+					if (ext == "mp4") return callback(null, video);
+					convertVideo(config.videoDirectory + video.pathNoExt, ext, video._id,
+						function(error) {
+							if (error) return callback(error);
+							return callback(null, video);
+						});
+				},
+				// Generate the thumbnails
+				function(video, callback) {
+					generateThumbnails(config.videoDirectory + video.pathNoExt + ".mp4", video._id, function(error) {
+						if (error) return callback(error);
+						return callback(null, video);
+					});
+				},
+				// Set the video state to ready
+				function(video, callback) {
+					models.Video.update({
+						_id: video._id
+					}, {
+						ready: true
+					}, function() {
+						return;
+					});
+					video.ready = true;
+					return callback(null, video);
+				}
+			],
+			//Display an error if there was one | Return the video otherwise
+			function(error, video) {
+				if (error) {
 					return res.json({
-						"success": false,
-						"error": err
+						error: error
 					});
 				}
-				modules.fs.unlink(tmp_path, function() {
-					if (err) {
-						return res.json({
-							"success": false,
-							"error": err
-						});
-					}
-					video.archived = undefined;
-					video.__v = undefined;
-					if (ext != "mp4") {
-						convertVideo(config.videoDirectory + video.pathNoExt, ext, video._id);
-					} else {
-						models.Video.update({
-							_id: video._id
-						}, {
-							ready: true
-						}, function() {
-							return;
-						});
-						video.ready = true;
-						genrateThumbnails(config.videoDirectory + video.pathNoExt + ".mp4", video._id);
-					}
-					res.json({
-						success: true,
-						video: video
-					});
+				video.archived = undefined;
+				video.__v = undefined;
+				return res.json({
+					success: true,
+					video: video
 				});
 			});
-		});
 	});
 
 
@@ -308,14 +319,14 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			.populate("_user", "-accessToken -__v")
 			.sort("-created")
 			.lean()
-			.exec(function(err, videos) {
-				if (err) {
+			.exec(function(error, videos) {
+				if (error) {
 					return res.json({
 						"success": false,
-						"error": err
+						"error": error
 					});
 				}
-				if (videos.length == 0) {
+				if (videos.length === 0) {
 					res.json({
 						"success": true,
 						"data": videos
@@ -336,7 +347,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					models.View.find({
 							_video: videos[i]._id
 						})
-						.exec(function(i, err, views) {
+						.exec(function(i, error, views) {
 							pushNbViews(views.length, i);
 						}.bind(models.View, i));
 				}
@@ -385,8 +396,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			}])
 			.select("-__v -archived")
 			.lean()
-			.exec(function(err, videos) {
-				if (err) {
+			.exec(function(error, videos) {
+				if (error) {
 					return res.json({
 						"success": false,
 						"error": "Une erreur est survenue."
@@ -420,7 +431,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					models.View.find({
 							_video: videos[i]._id
 						})
-						.exec(function(i, err, views) {
+						.exec(function(i, error, views) {
 							pushNbViews(views.length, i);
 						}.bind(models.View, i));
 				}
@@ -447,11 +458,11 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			.limit(req.params.number)
 			.sort("-created")
 			.lean()
-			.exec(function(err, videos) {
-				if (err) {
+			.exec(function(error, videos) {
+				if (error) {
 					return res.json({
 						"success": false,
-						"error": err
+						"error": error
 					});
 				}
 				if (videos.length == 0) {
@@ -475,7 +486,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					models.View.find({
 							_video: videos[i]._id
 						})
-						.exec(function(i, err, views) {
+						.exec(function(i, error, views) {
 							pushNbViews(views.length, i);
 						}.bind(models.View, i));
 				}
@@ -490,7 +501,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 				_user: req.user._id
 			})
 			.populate("_video")
-			.exec(function(err, views) {
+			.exec(function(error, views) {
 				console.log(views);
 			});
 
@@ -500,7 +511,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 		// .select("-__v -archived")
 		// .populate("_user", "-accessToken -__v")
 		// .lean()
-		// .exec(function(err, videos){
+		// .exec(function(error, videos){
 		// 	if(videos){
 		// 		if(videos.length == 0){
 		// 			res.json({"success": true, "data": videos});
@@ -515,12 +526,12 @@ module.exports.controller = function(app, router, config, modules, models, middl
 		// 		};
 		// 		for(var i=0; i < videos.length; i++){
 		// 			models.View.find({_video: videos[i]._id})
-		// 			.exec(function(i, err, views){
+		// 			.exec(function(i, error, views){
 		// 				pushNbViews(views.length, i);	
 		// 			}.bind(models.View, i));
 		// 		}
 		// 	}else{
-		// 		res.json({"success": false, "error": err});
+		// 		res.json({"success": false, "error": error});
 		// 	}
 		// });
 	});
@@ -537,11 +548,11 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			.select("-__v -archived")
 			.sort("-created")
 			.lean()
-			.exec(function(err, videos) {
-				if (err) {
+			.exec(function(error, videos) {
+				if (error) {
 					return res.json({
 						"success": false,
-						"error": err
+						"error": error
 					});
 				}
 				if (videos.length == 0) {
@@ -565,7 +576,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					models.View.find({
 							_video: videos[i]._id
 						})
-						.exec(function(i, err, views) {
+						.exec(function(i, error, views) {
 							pushNbViews(views.length, i);
 						}.bind(models.View, i));
 				}
@@ -586,11 +597,11 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			.populate("_user", "-accessToken -__v")
 			.select("-__v -archived")
 			.lean()
-			.exec(function(err, videos) {
-				if (err) {
+			.exec(function(error, videos) {
+				if (error) {
 					return res.json({
 						"success": false,
-						"error": err
+						"error": error
 					});
 				}
 				if (videos.length == 0) {
@@ -614,7 +625,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					models.View.find({
 							_video: videos[i]._id
 						})
-						.exec(function(i, err, views) {
+						.exec(function(i, error, views) {
 							pushNbViews(views.length, i);
 						}.bind(models.View, i));
 				}
@@ -637,8 +648,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 				})
 				.select("-__v -archived")
 				.where("archived").ne(true)
-				.exec(function(err, video) {
-					if (err) {
+				.exec(function(error, video) {
+					if (error) {
 						return res.json({
 							"success": false,
 							"error": "Video not found."
@@ -646,11 +657,11 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					}
 					models.Video.update({
 						_id: req.params.vid
-					}, editVideo, function(err) {
-						if (err) {
+					}, editVideo, function(error) {
+						if (error) {
 							if (config.debug == true) {
 								console.log({
-									"error_PUT_video": err
+									"error_PUT_video": error
 								});
 							}
 							return res.json({
@@ -680,8 +691,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 				_id: req.params.vid,
 				_user: req.user._id
 			})
-			.exec(function(err, video) {
-				if (err) {
+			.exec(function(error, video) {
+				if (error) {
 					return res.json({
 						"success": false,
 						"error": "You can't remove this video."
@@ -689,11 +700,11 @@ module.exports.controller = function(app, router, config, modules, models, middl
 				}
 				models.Video.remove({
 					_id: video._id
-				}, function(err) {
-					if (err) {
+				}, function(error) {
+					if (error) {
 						res.json({
 							"success": false,
-							"error": err
+							"error": error
 						});
 					} else {
 						var videoPath = config.videoDirectory + "/" + video._id + "." + video.ext;
@@ -705,7 +716,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 						});
 						models.View.remove({
 							_video: video._id
-						}, function(err) {
+						}, function(error) {
 							return;
 						});
 						res.json({
@@ -725,8 +736,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 				_id: req.params.vid,
 				_user: req.user._id
 			})
-			.exec(function(err, video) {
-				if (err) {
+			.exec(function(error, video) {
+				if (error) {
 					return res.json({
 						"success": false,
 						"error": "You can't archive this video."
@@ -736,8 +747,8 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					_id: video._id
 				}, {
 					archived: true
-				}, function(err) {
-					if (!err) {
+				}, function(error) {
+					if (!error) {
 						res.json({
 							"success": true
 						});
