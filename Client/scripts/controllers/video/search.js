@@ -1,45 +1,41 @@
 mewPipeApp.controller('VideoSearchCtrl', ['$rootScope', '$http', '$scope', '$route', '$location', '$callService', '$routeParams', '$videoService',
-	function ($rootScope, $http, $scope, $route, $location, $callService, $routeParams, $videoService) {
+	function($rootScope, $http, $scope, $route, $location, $callService, $routeParams, $videoService) {
 
-		var counter = 0;
+		$scope.canLoad = true;
 		var maxItems = 5;
 		$scope.videos = [];
 		$scope.param = {
 			q: atob($routeParams.param),
-			page: counter
-			//sort: ['views', 'created', 'name']
+			page: 0
 		};
-		
+
 		if ($routeParams.param) {
-			$callService.request('POST', 'video_search', null, $scope.param, null).then(function (data) {
+			$callService.request('POST', 'video_search', null, $scope.param, null).then(function(data) {
 				if (data.length > 0) {
-					for (var i in data) {
-						$scope.videos.push($videoService(data[i], null));
-					}
-					counter++;
+					data.forEach(function(video) {
+						$scope.videos.push($videoService(video, null));
+					});
+					if (data.length <= maxItems) $scope.canLoad = false;
 				} else {
 					$scope.videos = [];
+					$scope.canLoad = false;
 				}
 			});
 		}
 
-		$scope.canLoad = true;
-		$scope.loadMore = function () {
-			if ($scope.videos.length >= maxItems) {
-				$scope.canLoad = false;
-				return;
-			} else {
-				//console.log($scope.param);
-				$callService.request('POST', 'video_search', null, $scope.param, null).then(function (data) {
-					if (data.length > 0) {
-						for (var i in data) {
-							$scope.videos.push($videoService(data[i], null));
-
-						}
-						counter++;
-					}
-				});
-			}
+		$scope.loadMore = function() {
+			$scope.param.page++;
+			$callService.request('POST', 'video_search', null, $scope.param, null).then(function(data) {
+				if (data.length > 0) {
+					data.forEach(function(video) {
+						$scope.videos.push($videoService(video, null));
+					});
+					if (data.length <= maxItems) $scope.canLoad = false;
+				} else {
+					$scope.canLoad = false;
+				}
+			});
 		};
-		
-	}]);
+
+	}
+]);

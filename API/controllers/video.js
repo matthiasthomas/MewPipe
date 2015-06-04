@@ -368,7 +368,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 		if (typeof req.body.sort == "undefined") {
 			req.body.sort = "-created";
 		}
-		if (req.body.sort == "-views" || req.body.sort == "-views") {
+		if (req.body.sort == "-views") {
 			var sortViews = true;
 			req.body.sort = "-created";
 		}
@@ -379,7 +379,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 		models.Video.find({
 				rights: "public"
 			})
-			.where("archived").ne(true)
+			.where("archived").equals(false)
 			.where("ready").equals(true)
 			.populate("_user", "-accessToken -__v")
 			.limit(config.itemsPerPage)
@@ -399,42 +399,40 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			.exec(function(error, videos) {
 				if (error) {
 					return res.json({
-						"success": false,
-						"error": "Une erreur est survenue."
+						success: false,
+						error: "Une erreur est survenue."
 					});
 				}
-				if (videos.length == 0) {
-					if (sortViews) {
-						modules._.sortBy(videos, '-views');
+
+				if (sortViews) {
+					modules._.sortBy(videos, '-views');
+					return res.json({
+						success: true,
+						data: videos
+					});
+				}
+
+				modules.async.each(videos,
+					function(video, callback) {
+						models.View.count({
+							_video: video._id
+						}, function(error, count) {
+							if (error) return callback(error);
+							video.views = count;
+							return callback();
+						});
+					},
+					function(error) {
+						if (error) {
+							return res.json({
+								error: error
+							});
+						}
 						return res.json({
-							"success": true,
-							"data": videos
+							success: true,
+							data: videos
 						});
-					}
-					res.json({
-						"success": true,
-						"data": videos
 					});
-				}
-				var last = 0;
-				var pushNbViews = function(count, i) {
-					videos[i].views = count;
-					last++;
-					if (last >= videos.length) {
-						res.json({
-							"success": true,
-							"data": videos
-						});
-					}
-				};
-				for (var i = 0; i < videos.length; i++) {
-					models.View.find({
-							_video: videos[i]._id
-						})
-						.exec(function(i, error, views) {
-							pushNbViews(views.length, i);
-						}.bind(models.View, i));
-				}
 			});
 	});
 
@@ -504,36 +502,6 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			.exec(function(error, views) {
 				console.log(views);
 			});
-
-
-		// models.Video.find({rights: "public"})
-		// .where("archived").ne(true)
-		// .select("-__v -archived")
-		// .populate("_user", "-accessToken -__v")
-		// .lean()
-		// .exec(function(error, videos){
-		// 	if(videos){
-		// 		if(videos.length == 0){
-		// 			res.json({"success": true, "data": videos});
-		// 		}
-		// 		var	last = 0;
-		// 		var pushNbViews = function(count, i){
-		// 			videos[i].views = count;
-		// 			last++;
-		// 			if(last >= videos.length){
-		// 				res.json({"success": true, "data": videos});
-		// 			}
-		// 		};
-		// 		for(var i=0; i < videos.length; i++){
-		// 			models.View.find({_video: videos[i]._id})
-		// 			.exec(function(i, error, views){
-		// 				pushNbViews(views.length, i);	
-		// 			}.bind(models.View, i));
-		// 		}
-		// 	}else{
-		// 		res.json({"success": false, "error": error});
-		// 	}
-		// });
 	});
 
 	/**

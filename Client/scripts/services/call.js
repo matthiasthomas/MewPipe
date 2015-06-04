@@ -51,7 +51,6 @@ MewPipeModule.factory('$callService', [
 					method: method,
 					headers: {
 						'x-access-token': (token) ? $rootScope.app.getToken() : null
-							// 'Authorization': 'Basic ' + login_base64
 					},
 					data: data
 				}).then(function(res) {

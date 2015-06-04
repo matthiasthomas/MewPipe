@@ -2,13 +2,13 @@
 var MewPipeModule = angular.module('ServiceModule');
 MewPipeModule.factory('$videoService', [
 	'$rootScope', '$q', '$location', '$sce',
-	function ($rootScope, $q, $location, $sce) {
+	function($rootScope, $q, $location, $sce) {
 
 		/**
-		 * Generique object videogular with custom functions 
+		 * Generique object videogular with custom functions
 		 * Return {object} videogular formated
 		 */
-		var $videoService = function (data, action) {
+		var $videoService = function(data, action) {
 
 			if (action == "download") {
 				action = [{
@@ -36,19 +36,19 @@ MewPipeModule.factory('$videoService', [
 				size: bytesToSize(data.size),
 				views: data.views,
 				rights: data.rights,
-				ready : data.ready,
+				ready: data.ready,
 				sources: action,
 				plugins: {
 					poster: ''
 				},
 				theme: "lib/videogular-themes-default/videogular.css",
-				image: config.getApiAddr() + config.api.route['video_image'] + "/" + data._id,
+				image: config.getApiAddr() + config.api.route.video_image + "/" + data._id,
 
 				link: url,
-				stop: function () {
+				stop: function() {
 
 				},
-				onPlayerReady: function ($API) {
+				onPlayerReady: function($API) {
 					console.log($API);
 				}
 			};
@@ -56,4 +56,5 @@ MewPipeModule.factory('$videoService', [
 
 		return $videoService;
 
-	}]);  
+	}
+]);
