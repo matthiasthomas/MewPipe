@@ -491,7 +491,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	/**
 	 * VIDEO SUGGESTION
 	 **/
-	router.get('/user/videos/suggest', middlewares.checkAuth, function(req, res) {;
+	router.get('/user/videos/suggest', middlewares.checkAuth, function(req, res) {
 		modules.async.waterfall([
 			// Get the videos that the user has watched
 			function(callback) {
@@ -512,7 +512,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					if (error) return callback(error);
 					var userIds = [];
 					views.forEach(function(view) {
-						userIds.push(view._user);
+						if (view._user) userIds.push(view._user);
 					});
 					return callback(null, userIds);
 				});
@@ -530,15 +530,53 @@ module.exports.controller = function(app, router, config, modules, models, middl
 			},
 			// Group the videos by count
 			function(videoIds, callback) {
+				var videos = [],
+					views = [],
+					previous, i;
+
 				videoIds.sort();
-				var result = {};
 				for (i = 0; i < videoIds.length; i++) {
-					if (!result[videoIds[i]]) result[videoIds[i]] = 0;
-					++result[videoIds[i]];
+					if (videoIds[i] !== previous) {
+						videos.push(videoIds[i]);
+						views.push(1);
+					} else {
+						views[views.length - 1]++;
+					}
+					previous = videoIds[i];
 				}
+				var suggestedVideos = [];
+				for (i = 0; i < videos.length; i++) {
+					suggestedVideos.push({
+						_id: videos[i],
+						count: views[i]
+					});
+				}
+				suggestedVideos = modules._.sortBy(suggestedVideos, 'count');
+				suggestedVideos = suggestedVideos.reverse();
+				return callback(null, suggestedVideos);
+			},
+			// Get the videos
+			function(suggestedVideos, callback) {
+				var videos = [];
+				modules.async.each(suggestedVideos,
+					function(suggestedVideo, subCallback) {
+						models.Video.findById(suggestedVideo._id, function(error, video) {
+							if (error) return subCallback(error);
+							videos.push(video);
+							return subCallback();
+						});
+					},
+					function(error) {
+						if (error) return callback(error);
+						return callback(null, videos);
+					});
 			}
-		], function(error, result) {
-			if (error) res.send(error);
+		], function(error, videos) {
+			if (error) return res.send(error);
+			return res.json({
+				success: true,
+				data: videos
+			});
 		});
 	});
 
