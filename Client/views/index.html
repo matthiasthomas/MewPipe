@@ -2,8 +2,8 @@
     <div class="col-lg-12">
         <div class="bs-component">
             <div class="jumbotron">
-                <h1>Most Viewed</h1>
-                <p>Here are MewPipe's most viewed videos. You can trust our users, they have the best tastes in video.</p>
+                <h1>Popular</h1>
+                <p>Here are some popular videos from MewPipe. Enjoy the very best, based on what other viewers watch :)</p>
                 <div id="index">
                     <section id="relatedVideo" style="width: 300px;height: 290px;display: inline-block;position: relative;margin: 10px;overflow: hidden;" ng-repeat="video in relatedVideos">
                         <a href="#/video/show/{{ video._id }}">
@@ -22,8 +22,8 @@
     <div ng-if="app.getToken()" class="col-lg-12">
         <div class="bs-component">
             <div class="jumbotron">
-                <h1 id="container">Suggested</h1>
-                <p>Here are some suggestions in relation to what you've watched in the past</p>
+                <h1 id="container">Suggestions</h1>
+                <p>Liked watching something ? Let's try something similar ;)</p>
                 <div id="index">
                     <section id="suggestVideos" style="width: 300px;height: 290px;display: inline-block;position: relative;margin: 10px;overflow: hidden;" ng-repeat="video in suggestVideos">
                         <a href="#/video/show/{{ video._id }}">
