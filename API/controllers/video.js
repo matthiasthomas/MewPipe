@@ -492,6 +492,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	 * VIDEO SUGGESTION
 	 **/
 	router.get('/user/videos/suggest', middlewares.checkAuth, function(req, res) {
+
 		modules.async.waterfall([
 			// Get the videos that the user has watched
 			function(callback) {
@@ -506,7 +507,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 					return callback(null, videoIds);
 				});
 			},
-			// Get the user who have also watched these videos
+			// Get the users who have also watched these videos
 			function(videoIds, callback) {
 				models.View.where('_video').in(videoIds).exec(function(error, views) {
 					if (error) return callback(error);
@@ -571,6 +572,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 						return callback(null, videos);
 					});
 			}
+		// Return the videos if no error was encountered
 		], function(error, videos) {
 			if (error) return res.send(error);
 			return res.json({
@@ -578,6 +580,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 				data: videos
 			});
 		});
+
 	});
 
 	/**
