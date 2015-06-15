@@ -6,13 +6,13 @@ mewPipeApp.controller('UserUpdateCtrl', ['$rootScope', '$http', '$scope', '$rout
 
 		$callService.request(null, 'user_readOne', null, null, true).then(function (data) {
 			$scope.user = data;
-			$scope.user.birthdate = moment(data.created).format("MMMM Do YYYY");
+			$scope.user.birthdate = moment(data.birthdate).format("MMMM Do YYYY");
 			$scope.user.created = moment(data.created).format("MMMM Do YYYY, h:mm");
 		});
 
 		$scope.submitUpdate = function () {
-			$callService.request('POST', 'user_update', null, $scope.user, null).then(function (data) {
-				console.log(data);
+			$callService.request('PUT', 'user_update', null, $scope.user, true).then(function (data) {
+				$location.path('/user/profile');
 			});
 		};
 

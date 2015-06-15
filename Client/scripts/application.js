@@ -89,7 +89,7 @@ mewPipeApp.run([
 
 
 		/**
-		 * Truc de gitan
+		 * Bitch please
 		 */
 		$rootScope.submitSupinfo = function() {
 			document.body.innerHTML += '<form id="formSupinfo" method="post" action="' + $rootScope.app.getApi() + '/auth/supinfo" style="display:none;"><input name="openid_identifier" type="hidden" value="0"></form>';

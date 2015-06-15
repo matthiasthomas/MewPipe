@@ -17,7 +17,7 @@ MewPipeModule.factory('$videoService', [
 				}];
 			} else if (action == "play") {
 				action = [{
-					src: $sce.trustAsResourceUrl($rootScope.app.getApi() + '/api/videos/play/' + data._id),
+					src: $sce.trustAsResourceUrl($rootScope.app.getApi() + '/api/videos/play/' + data._id + '/' + $rootScope.app.getToken()),
 					type: "video/" + data.ext
 				}];
 			} else {

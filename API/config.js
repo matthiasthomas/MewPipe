@@ -13,7 +13,7 @@ var config = {
 	salt: "$2a$10$sU3LKpiKHhQghEezTKuZnY",
 	rootDirectory: __dirname,
 	server: {
-		address: profile == "DEV" ? '127.0.0.1' : '176.31.167.154',
+		address: profile == "DEV" ? 'localhost' : '176.31.167.154',
 		port: profile == "DEV" ? '8080' : '80'
 	},
 	storageDirectory: __dirname + "/data",

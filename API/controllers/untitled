@@ -1,0 +1,6 @@
+
+=> Find videos that the user has watched
+=> Find the other users that have watched the same videos
+=> Find the videos that all of those users have watched
+=> Group those videos by count of users
+=> Return the videos by count descending

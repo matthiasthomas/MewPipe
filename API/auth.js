@@ -305,14 +305,14 @@ passport.use(new supinfoStrategy({
 
 
 supinfoStrategy.prototype._parseProfileExt = function(params) {
-	var profile = {};
-	profile.lastname = fullName[fullName.length - 1];
-	profile.email = profile.boosterId + "@supinfo.com";
-	profile.boosterId = identifier[identifier.length - 1];
-	profile.firstname = fullName[0];
-	var identifier = params.claimedIdentifier.split('/');
-	var fullName = params.fullname.split(' ');
-	return profile;
+  var profile = {};
+  var identifier = params.claimedIdentifier.split('/');
+  var fullName = params.fullname.split(' ');
+  profile.boosterId = identifier[identifier.length - 1];
+  profile.firstname = fullName[0];
+  profile.lastname = fullName[fullName.length - 1];
+  profile.email = profile.boosterId+"@supinfo.com";
+  return profile;
 };
 
 module.exports = passport;

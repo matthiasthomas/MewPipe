@@ -1,10 +1,10 @@
 {
   "name": "MewPipe",
-  "version": "0.0.2",
+  "version": "1.0.0",
   "description": "MewPipe project",
-  "author": "https://github.com/Adowya/MewPipe/graphs/contributors",
+  "author": "Virtual Campus team",
   "license": "MIT",
-  "homepage": "http://adowya.github.io",
+  "homepage": "",
   "main": "scripts/app.js",
   "dependencies": {},
   "devDependencies": {
@@ -24,9 +24,5 @@
   },
   "scripts": {
     "start": "npm install"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/Adowya/MewPipe.git"
   }
 }

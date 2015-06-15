@@ -6,7 +6,7 @@
 			<ul class="list-group">
             	<li ng-if="user.created" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-calendar"></i> Joined</strong></span> {{user.created}}</li>
             	<li ng-if="user.email" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-envelope-o"></i> Email: </strong></span> {{user.email | filter:limit17}}</li>
-            	<li ng-if="user.firstname" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-meh-o"></i> Real name</strong></span>{{user.firstname}}</li>
+            	<li ng-if="user.firstname" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-meh-o"></i> Real name</strong></span>{{user.firstname}} {{user.lastname}}</li>
             	<li ng-if="user.birthdate" class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-birthday-cake"></i> Birthdate</strong></span>{{user.birthdate}}</li>
             	<li class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-user"></i> Role: </strong></span>Client {{user.role}}</li>
             	<li class="list-group-item text-right"><span class="pull-left"><strong class=""><i class="fa fa-sign-out"></i> Last seen</strong></span> Yesterday {{user.update}}</li>

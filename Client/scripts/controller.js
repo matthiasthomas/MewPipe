@@ -4,15 +4,15 @@ mewPipeApp.controller('MainCtrl', ['$rootScope', '$http', '$scope', '$route', '$
 		$scope.relatedVideos = [];
 		$callService.request(null, 'video_read', null, null, null).then(function (data) {
 			for (var i in data) {
-				$scope.relatedVideos.push($videoService(data[i], 'play'));
+				$scope.relatedVideos.push($videoService(data[i], null));
 				$scope.user = data._user;
 			}
 		});
 
 		$scope.suggestVideos = [];
-		$callService.request(null, 'video_last', 6, null, null).then(function (data) {
+		$callService.request(null, 'video_suggest', null, null, true).then(function (data) {
 			for (var i in data) {
-				$scope.suggestVideos.push($videoService(data[i], 'play'));
+				$scope.suggestVideos.push($videoService(data[i], null));
 				$scope.user = data._user;
 			}
 		});

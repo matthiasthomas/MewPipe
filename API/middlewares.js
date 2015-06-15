@@ -44,7 +44,7 @@ module.exports.controller = function(app, config, modules, models, middlewares, 
 	exports.getUser = function(req, res, next) {
 		if (!req.mewPipe) req.mewPipe = {};
 		// Get the token for the headers
-		var token = req.headers["x-access-token"];
+		var token = req.headers["x-access-token"] || req.params.token;
 		// Check the token
 		if (token) {
 			var sessionIndex = getSessionIndexByToken(token);

@@ -26,6 +26,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 				});
 			});
 	};
+
 	/**
 	 * GENERATE THUMBNAILS
 	 **/
@@ -86,7 +87,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	/**
 	 * VIEW VIDEO
 	 **/
-	router.get('/videos/play/:vid', middlewares.getUser, middlewares.getIP, function(req, res) {
+	router.get('/videos/play/:vid/:token', middlewares.getUser, middlewares.getIP, function(req, res) {
 		models.Video.findOne({
 			_id: req.params.vid
 		}).exec(function(error, video) {
@@ -307,7 +308,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 
 
 	/**
-	 * BROWSE VIDEO
+	 * All public Videos
 	 **/
 	router.get('/videos', function(req, res) {
 		models.Video.find({
@@ -406,10 +407,6 @@ module.exports.controller = function(app, router, config, modules, models, middl
 
 				if (sortViews) {
 					modules._.sortBy(videos, '-views');
-					return res.json({
-						success: true,
-						data: videos
-					});
 				}
 
 				modules.async.each(videos,
@@ -494,14 +491,55 @@ module.exports.controller = function(app, router, config, modules, models, middl
 	/**
 	 * VIDEO SUGGESTION
 	 **/
-	router.get('/user/videos/suggestion', middlewares.checkAuth, function(req, res) {
-		models.View.find({
-				_user: req.user._id
-			})
-			.populate("_video")
-			.exec(function(error, views) {
-				console.log(views);
-			});
+	router.get('/user/videos/suggest', middlewares.checkAuth, function(req, res) {;
+		modules.async.waterfall([
+			// Get the videos that the user has watched
+			function(callback) {
+				models.View.find({
+					_user: req.user._id
+				}, function(error, views) {
+					if (error) return callback(error);
+					var videoIds = [];
+					views.forEach(function(view) {
+						videoIds.push(view._video);
+					});
+					return callback(null, videoIds);
+				});
+			},
+			// Get the user who have also watched these videos
+			function(videoIds, callback) {
+				models.View.where('_video').in(videoIds).exec(function(error, views) {
+					if (error) return callback(error);
+					var userIds = [];
+					views.forEach(function(view) {
+						userIds.push(view._user);
+					});
+					return callback(null, userIds);
+				});
+			},
+			// Get the videos that all of those users have watched
+			function(userIds, callback) {
+				models.View.where('_user').in(userIds).populate('_video').exec(function(error, views) {
+					if (error) return callback(error);
+					var videoIds = [];
+					views.forEach(function(view) {
+						videoIds.push(view._video._id);
+					});
+					return callback(null, videoIds);
+				});
+			},
+			// Group the videos by count
+			function(videoIds, callback) {
+				videoIds.sort();
+				var result = {};
+				for (i = 0; i < videoIds.length; i++) {
+					if (!result[videoIds[i]]) result[videoIds[i]] = 0;
+					++result[videoIds[i]];
+				}
+			}
+		], function(error, result) {
+			if (error) res.send(error);
+		});
 	});
 
 	/**
@@ -602,7 +640,7 @@ module.exports.controller = function(app, router, config, modules, models, middl
 
 
 	/**
-	 * UPDATE
+	 * UPDATE 
 	 **/
 	router.put("/videos/:vid", middlewares.checkAuth, function(req, res) {
 		if (req.body.name && req.body.description && req.body.rights) {
@@ -652,82 +690,92 @@ module.exports.controller = function(app, router, config, modules, models, middl
 
 
 	/**
-	 * DELETE VIDEO
+	 * DELETE
 	 **/
 	router.delete('/videos/:vid', middlewares.checkAuth, function(req, res) {
-		models.Video.findOne({
-				_id: req.params.vid,
-				_user: req.user._id
-			})
-			.exec(function(error, video) {
-				if (error) {
-					return res.json({
-						"success": false,
-						"error": "You can't remove this video."
-					});
-				}
-				models.Video.remove({
-					_id: video._id
-				}, function(error) {
-					if (error) {
-						res.json({
-							"success": false,
-							"error": error
-						});
-					} else {
+		modules.async.waterfall([
+			// Find the video
+			function(callback) {
+				models.Video.findOne({
+					_id: req.params.vid,
+					_user: req.user._id
+				}, callback);
+			},
+			// Remove the video and its data
+			function(video, callback) {
+				modules.async.parallel([
+					// Remove from the db
+					function(SubCallback) {
+						models.Video.remove({
+							_id: video._id
+						}, SubCallback);
+					},
+					// Remove the video
+					function(SubCallback) {
 						var videoPath = config.videoDirectory + "/" + video._id + "." + video.ext;
+						modules.fs.unlink(videoPath, SubCallback);
+					},
+					// Remove the thumbnail
+					function(SubCallback) {
 						var thumbnailPath = config.thumbnailsDirectory + "/" + video._id + ".png";
-						modules.fs.unlink(videoPath, function() {
-							modules.fs.unlink(thumbnailPath, function() {
-								return;
-							});
-						});
+						modules.fs.unlink(thumbnailPath, SubCallback);
+					},
+					// Remove the associated views
+					function(SubCallback) {
 						models.View.remove({
 							_video: video._id
-						}, function(error) {
-							return;
-						});
-						res.json({
-							"success": true
-						});
+						}, SubCallback);
 					}
+				], function(error) {
+					if (error) return callback(error);
+					return callback();
 				});
+			}
+		], function(error) {
+			var success = true;
+			if (error) success = false;
+			return res.json({
+				success: success,
+				error: error
 			});
+		});
 	});
 
 
 	/**
-	 * ARCHIVE VIDEO
+	 * ARCHIVE
 	 **/
 	router.get('/videos/archive/:vid', middlewares.checkAuth, function(req, res) {
-		models.Video.findOne({
-				_id: req.params.vid,
-				_user: req.user._id
-			})
-			.exec(function(error, video) {
-				if (error) {
-					return res.json({
-						"success": false,
-						"error": "You can't archive this video."
+
+		modules.async.waterfall([
+				function(callback) {
+					models.Video.findOne({
+						_id: req.params.vid,
+						_user: req.user._id
+					}, function(error, video) {
+						if (error) return callback(error);
+						if (!video) return callback("There is no video to archive");
+						return callback(null, video);
+					});
+				},
+				function(video, callback) {
+					models.Video.update({
+						_id: video._id
+					}, {
+						archived: true
+					}, function(error) {
+						if (error) return callback(error);
+						return callback();
 					});
 				}
-				models.Video.update({
-					_id: video._id
-				}, {
-					archived: true
-				}, function(error) {
-					if (!error) {
-						res.json({
-							"success": true
-						});
-					} else {
-						res.json({
-							"success": true,
-							"error": "An error occured."
-						});
-					}
+			],
+			function(error) {
+				var success = true;
+				if (error) success = false;
+				return res.json({
+					success: success,
+					error: error
 				});
 			});
 	});
-
 };

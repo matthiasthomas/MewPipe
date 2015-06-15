@@ -6,6 +6,7 @@ mewPipeApp.controller('UserProfileCtrl', ['$rootScope', '$http', '$scope', '$rou
 
 		$callService.request(null, 'user_readOne', null, null, true).then(function (data) {
 			$scope.user = data;
+			console.log($scope.user);
 			$scope.user.birthdate = moment(data.created).format("MMMM Do YYYY");
 			$scope.user.created = moment(data.created).format("MMMM Do YYYY, h:mm");
 		});
